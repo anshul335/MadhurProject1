@@ -6,7 +6,7 @@ function useFirebase() {
 
   useEffect(() => {
     if (!firebaseConfig.apiKey) {
-        console.error("Firebase config is missing. Snippet storage will not work.");
+        console.error("Firebase API key is missing. Cannot initialize Firebase.");
         setIsReady(true);
         return;
     }

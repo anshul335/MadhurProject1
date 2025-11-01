@@ -4,10 +4,28 @@ import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged }
 import { getFirestore, collection, query, addDoc, onSnapshot, orderBy, serverTimestamp } from 'firebase/firestore';
 import { Copy, Plus, Search, Code, Tag, User } from 'lucide-react';
 
-// --- Configuration Constants (Would be in constants/languages.js) ---
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+// --- Configuration Constants ---
+
+// The user provided their specific Firebase configuration:
+const USER_FIREBASE_CONFIG = {
+  apiKey: "AIzaSyD9_Ech69TlN2Iw6fNuJFrxD2FnGY9EC2I",
+  authDomain: "smiling-rhythm-458113-p4.firebaseapp.com",
+  projectId: "smiling-rhythm-458113-p4",
+  storageBucket: "smiling-rhythm-458113-p4.firebasestorage.app",
+  messagingSenderId: "506882005035",
+  appId: "1:506882005035:web:8f5d6bb2711e39a4f2726e",
+  measurementId: "G-K0X47Z7MWN"
+};
+
+// Prioritize environment variables if they are set (for Canvas), otherwise use the provided configuration.
+const ENV_CONFIG = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+const firebaseConfig = ENV_CONFIG.apiKey ? ENV_CONFIG : USER_FIREBASE_CONFIG;
+
+const ENV_APP_ID = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
+const ENV_AUTH_TOKEN = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+const appId = ENV_APP_ID;
+const initialAuthToken = ENV_AUTH_TOKEN; 
 
 const LANGUAGES = {
   'javascript': { color: 'text-yellow-400', name: 'JavaScript' },
@@ -17,6 +35,7 @@ const LANGUAGES = {
   'markdown': { color: 'text-gray-400', name: 'Markdown' },
   'generic': { color: 'text-indigo-400', name: 'Generic' }
 };
+
 
 const App = () => {
   const { db, userId, isReady } = useFirebase();
